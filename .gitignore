@@ -1,17 +1,29 @@
-# Ignore IntelliJ IDEA settings
+######################
+# IntelliJ
+######################
 .idea/
-
-# Ignore Maven target directory
-target/
-
-# Ignore compiled Java classes
-*.class
-
-# Ignore logs and temp files
-*.log
-*.tmp
-
-# Ignore OS files
+*.iml
+*.iws
+*.ipr
+*.ids
+*.orig
+classes/
+out/
 .DS_Store
-Thumbs.db
 
+######################
+# Visual Studio Code
+######################
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+######################
+# Maven
+######################
+/log/
+target/
+*.lst
