@@ -1,1 +1,17 @@
-**/.idea/
+# Ignore IntelliJ IDEA settings
+.idea/
+
+# Ignore Maven target directory
+target/
+
+# Ignore compiled Java classes
+*.class
+
+# Ignore logs and temp files
+*.log
+*.tmp
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
