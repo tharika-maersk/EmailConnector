@@ -1,5 +1,6 @@
 package com.poc.EmailConnector.routes;
 
+import com.poc.EmailConnector.processor.EmailContentProcessor;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,11 +22,12 @@ public class EmailToAMQRoute extends RouteBuilder {
             + "&password=" + password
             + "&mail.imap.auth=true"
             + "&mail.imap.starttls.enable=true"
-            + "&delete=false&unseen=true&delay=60000")
-            .routeId("emailReceiver")
-            .log(LoggingLevel.INFO, "ROUTE STARTED: Listening to Gmail IMAP")
-            .log(LoggingLevel.INFO, "Message headers: ${headers}")
-            .log(LoggingLevel.INFO, "EMAIL NOTIFICATION RECEIVED : ${body}")
-            .stop();
+            + "&delete=false&unseen=true")
+        .routeId("emailReceiver")
+        .log(LoggingLevel.INFO, "ROUTE STARTED: Listening to Gmail IMAP")
+        .log(LoggingLevel.INFO, "Message headers: ${headers}")
+        .log(LoggingLevel.INFO, "EMAIL RECEIVED : ${body}")
+        .process(new EmailContentProcessor())
+            .to("jms://");
   }
 }

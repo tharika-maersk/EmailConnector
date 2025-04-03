@@ -24,7 +24,7 @@ public class EmailSenderRoute extends RouteBuilder {
                 + "&mail.smtp.auth=true"
                 + "&mail.smtp.starttls.enable=true")
             .routeId("emailSender")
-        .log(LoggingLevel.INFO, "EMAIL NOTIFICATION SENT")
+        .log(LoggingLevel.INFO, "EMAIL SENT")
         .stop();
   }
 }
