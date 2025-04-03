@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmailToAMQRoute extends RouteBuilder {
+public class EmailToActiveMQRoute extends RouteBuilder {
 
   @Value("${camel.component.mail.username}")
   private String username;
@@ -24,10 +24,10 @@ public class EmailToAMQRoute extends RouteBuilder {
             + "&mail.imap.starttls.enable=true"
             + "&delete=false&unseen=true")
         .routeId("emailReceiver")
-        .log(LoggingLevel.INFO, "ROUTE STARTED: Listening to Gmail IMAP")
         .log(LoggingLevel.INFO, "Message headers: ${headers}")
-        .log(LoggingLevel.INFO, "EMAIL RECEIVED : ${body}")
+        .log(LoggingLevel.INFO, "Email received : ${body}")
         .process(new EmailContentProcessor())
-            .to("jms://");
+            .to("jms:queue:TEST.QUEUE.1")
+            .log("AMQ: Message sent");
   }
 }

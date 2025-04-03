@@ -16,7 +16,7 @@ public class EmailSenderRoute extends RouteBuilder {
   @Override
   public void configure() throws Exception {
     from("seda:sendEmail")
-        .log(LoggingLevel.INFO, "SENDING EMAIL NOTIFICATION")
+        .log(LoggingLevel.INFO, "Sending Email")
         .toD(
             "smtp://smtp.gmail.com:587"
                 + "?username=" + username
@@ -24,7 +24,7 @@ public class EmailSenderRoute extends RouteBuilder {
                 + "&mail.smtp.auth=true"
                 + "&mail.smtp.starttls.enable=true")
             .routeId("emailSender")
-        .log(LoggingLevel.INFO, "EMAIL SENT")
+        .log(LoggingLevel.INFO, "Email Sent")
         .stop();
   }
 }
