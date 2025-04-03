@@ -7,12 +7,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class EmailSenderRoute extends RouteBuilder {
-  @Value("${spring.mail.properties.mail.smtp.auth}")
-  private boolean auth;
-
-  @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
-  private boolean starttls;
-
   @Value("${camel.component.mail.username}")
   private String username;
 
@@ -25,14 +19,11 @@ public class EmailSenderRoute extends RouteBuilder {
         .log(LoggingLevel.INFO, "SENDING EMAIL NOTIFICATION")
         .toD(
             "smtp://smtp.gmail.com:587"
-                + "?username="
-                + username
-                + "&password="
-                + password
-                + "&mail.smtp.auth="
-                + auth
-                + "&mail.smtp.starttls.enable="
-                + starttls)
+                + "?username=" + username
+                + "&password=" + password
+                + "&mail.smtp.auth=true"
+                + "&mail.smtp.starttls.enable=true")
+            .routeId("emailSender")
         .log(LoggingLevel.INFO, "EMAIL NOTIFICATION SENT")
         .stop();
   }
