@@ -1,6 +1,6 @@
-package com.poc.EmailConnector.routes;
+package com.poc.emailconnector.routes;
 
-import com.poc.EmailConnector.processor.EmailContentProcessor;
+import com.poc.emailconnector.processor.EmailContentProcessor;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,8 +18,10 @@ public class EmailToActiveMQRoute extends RouteBuilder {
   @Override
   public void configure() throws Exception {
     from("imaps://imap.gmail.com:993"
-            + "?username=" + username
-            + "&password=" + password
+            + "?username="
+            + username
+            + "&password="
+            + password
             + "&mail.imap.auth=true"
             + "&mail.imap.starttls.enable=true"
             + "&delete=false&unseen=true")
@@ -27,7 +29,7 @@ public class EmailToActiveMQRoute extends RouteBuilder {
         .log(LoggingLevel.INFO, "Message headers: ${headers}")
         .log(LoggingLevel.INFO, "Email received : ${body}")
         .process(new EmailContentProcessor())
-            .to("jms:queue:TEST.QUEUE.1")
-            .log("AMQ: Message sent");
+        .to("jms:queue:TEST.QUEUE.1")
+        .log("Message sent to Active MQ");
   }
 }

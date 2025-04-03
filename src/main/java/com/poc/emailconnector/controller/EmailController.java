@@ -1,6 +1,6 @@
-package com.poc.EmailConnector.controller;
+package com.poc.emailconnector.controller;
 
-import com.poc.EmailConnector.service.EmailService;
+import com.poc.emailconnector.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package com.poc.EmailConnector.routes;
+package com.poc.emailconnector.routes;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
@@ -19,11 +19,13 @@ public class EmailSenderRoute extends RouteBuilder {
         .log(LoggingLevel.INFO, "Sending Email")
         .toD(
             "smtp://smtp.gmail.com:587"
-                + "?username=" + username
-                + "&password=" + password
+                + "?username="
+                + username
+                + "&password="
+                + password
                 + "&mail.smtp.auth=true"
                 + "&mail.smtp.starttls.enable=true")
-            .routeId("emailSender")
+        .routeId("emailSender")
         .log(LoggingLevel.INFO, "Email Sent")
         .stop();
   }
