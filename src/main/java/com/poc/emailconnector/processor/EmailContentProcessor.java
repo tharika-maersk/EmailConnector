@@ -2,6 +2,7 @@ package com.poc.emailconnector.processor;
 
 import jakarta.activation.DataHandler;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.camel.Exchange;
@@ -34,9 +35,12 @@ public class EmailContentProcessor implements Processor {
           attachmentsInBinary.add(att);
         }
       }
-      log.info("attached files {}", attachmentsFileNames);
-      EmailPayload payload =
-          new EmailPayload(subject, body, attachmentsFileNames, attachmentsInBinary);
+
+      Map<String, Object> payload = new HashMap<>();
+      payload.put("subject", subject);
+      payload.put("body", body);
+      payload.put("filenames", attachmentsFileNames);
+      payload.put("attachments", attachmentsInBinary);
       exchange.getIn().setBody(payload);
     } catch (Exception e) {
       log.error("Exception Occurred while Processing the Mail : {}", e.getMessage());
