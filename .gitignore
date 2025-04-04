@@ -27,3 +27,5 @@ out/
 /log/
 target/
 *.lst
+
+src/main/resources/attachments-output
