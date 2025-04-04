@@ -39,6 +39,7 @@ public class ActiveMQConsumerRoute extends RouteBuilder {
                   fos.write(fileBytes);
                 }
               }
+              logger.info("Attachments Added to output dir");
             });
   }
 }
