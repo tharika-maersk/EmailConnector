@@ -1,7 +1,8 @@
 package com.poc.emailconnector.routes;
 
+import static org.apache.camel.LoggingLevel.INFO;
+
 import com.poc.emailconnector.processor.EmailContentProcessor;
-import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -26,8 +27,7 @@ public class EmailToActiveMQRoute extends RouteBuilder {
             + "&mail.imap.starttls.enable=true"
             + "&delete=false&unseen=true")
         .routeId("emailReceiver")
-        .log(LoggingLevel.INFO, "Message headers: ${headers}")
-        .log(LoggingLevel.INFO, "Email received : ${body}")
+        .log(INFO, "Email received;\n body : ${body} subject : ${headers.Subject}")
         .process(new EmailContentProcessor())
         .to("jms:queue:TEST.QUEUE.1")
         .log("Message sent to Active MQ");
