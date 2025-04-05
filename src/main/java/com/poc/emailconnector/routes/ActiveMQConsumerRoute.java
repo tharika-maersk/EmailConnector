@@ -1,7 +1,9 @@
 package com.poc.emailconnector.routes;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import static org.apache.camel.LoggingLevel.INFO;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.camel.builder.RouteBuilder;
@@ -28,19 +30,21 @@ public class ActiveMQConsumerRoute extends RouteBuilder {
               List<String> filenames = (List<String>) payload.get("filenames");
               List<String> attachments = (List<String>) payload.get("attachments");
 
-              File outputDir = new File("src/main/resources/attachments-output");
+              List<Map<String, Object>> attachmentsInfo = new ArrayList<>();
               for (int i = 0; i < filenames.size(); i++) {
-                String base64 = attachments.get(i);
-                byte[] fileBytes = java.util.Base64.getDecoder().decode(base64);
-                String fileName = filenames.get(i);
-                File file = new File(outputDir, fileName);
-                logger.info(
-                    "Attachment {} , attachment size : {} bytes", (i + 1), fileBytes.length);
-                try (FileOutputStream fos = new FileOutputStream(file)) {
-                  fos.write(fileBytes);
-                }
+                Map<String, Object> attachment = new HashMap<>();
+                attachment.put("fileName", filenames.get(i));
+                attachment.put(
+                    "fileContent", java.util.Base64.getDecoder().decode(attachments.get(i)));
+                attachmentsInfo.add(attachment);
               }
-              logger.info("Attachments Added to output dir");
-            });
+              exchange.getIn().setBody(attachmentsInfo);
+            })
+        .split(body())
+        .parallelProcessing()
+        .setHeader("CamelFileName", simple("${body[fileName]}"))
+        .setBody(simple("${body[fileContent]}"))
+        .to("file:src/main/resources/attachments-output")
+        .log(INFO, "Added Attachments to output directory");
   }
 }
