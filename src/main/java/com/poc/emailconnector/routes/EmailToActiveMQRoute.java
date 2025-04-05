@@ -27,7 +27,7 @@ public class EmailToActiveMQRoute extends RouteBuilder {
             + "&mail.imap.starttls.enable=true"
             + "&delete=false&unseen=true")
         .routeId("emailReceiver")
-        .log(INFO, "Email received;\n body : ${body} subject : ${headers.Subject}")
+        .log(INFO, "Email received; subject : ${headers.Subject}\n body : ${body}")
         .process(new EmailContentProcessor())
         .to("jms:queue:TEST.QUEUE.1")
         .log("Message sent to Active MQ");
