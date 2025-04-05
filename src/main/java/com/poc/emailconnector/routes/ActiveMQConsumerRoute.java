@@ -1,9 +1,12 @@
 package com.poc.emailconnector.routes;
 
+import static org.apache.camel.LoggingLevel.INFO;
+
 import com.poc.emailconnector.processor.EmailPayload;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.camel.builder.RouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,19 +30,22 @@ public class ActiveMQConsumerRoute extends RouteBuilder {
 
               List<byte[]> attachments = payload.getAttachments();
               List<String> filenames = payload.getFilenames();
-
-              File outputDir = new File("src/main/resources/attachments-output");
+              List<Map<String, Object>> attachmentsInfo = new ArrayList<>();
               for (int i = 0; i < attachments.size(); i++) {
-                byte[] fileBytes = attachments.get(i);
-                String fileName = filenames.get(i);
-                File file = new File(outputDir, fileName);
                 logger.info(
-                    "Attachment {} , attachment size : {} bytes", (i + 1), fileBytes.length);
-                try (FileOutputStream fos = new FileOutputStream(file)) {
-                  fos.write(fileBytes);
-                }
+                    "File {} , File size : {} bytes", filenames.get(i), attachments.get(i).length);
+                Map<String, Object> attachment = new HashMap<>();
+                attachment.put("fileName", filenames.get(i));
+                attachment.put("fileContent", attachments.get(i));
+                attachmentsInfo.add(attachment);
               }
-              logger.info("Attachments Added to output dir");
-            });
+              exchange.getIn().setBody(attachmentsInfo);
+            })
+        .split(body())
+        .parallelProcessing()
+        .setHeader("CamelFileName", simple("${body[fileName]}"))
+        .setBody(simple("${body[fileContent]}"))
+        .to("file:src/main/resources/attachments-output")
+        .log(INFO, "Added ${file:name} to output directory");
   }
 }
